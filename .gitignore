@@ -1,1 +1,3 @@
-/server/public/*
+/server/public
+/bin
+server.bin
