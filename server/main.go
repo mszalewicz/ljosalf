@@ -13,7 +13,6 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 	http.HandleFunc("/", serveWasm)
 	http.ListenAndServe(address, nil)
-
 }
 
 func serveWasm(writer http.ResponseWriter, request *http.Request) {
@@ -26,8 +25,19 @@ func serveWasm(writer http.ResponseWriter, request *http.Request) {
     <title>Odin WebGPU Example</title>
 </head>
 <body>
-    <h1>Running Odin WebAssembly</h1>
-    <script src="/static/wasm_loader.js"></script>
+<canvas id="wgpu-canvas" style="height: 100%; width: 100%;"></canvas>
+	<script type="text/javascript" src="/static/odin.js"></script>
+	<script type="text/javascript" src="/static/wgpu.js"></script>
+	<script type="text/javascript">
+		const mem = new WebAssembly.Memory({ initial: 2000, maximum: 65536, shared: false });
+		const memInterface = new odin.WasmMemoryInterface();
+		memInterface.setMemory(mem);
+
+		const wgpuInterface = new odin.WebGPUInterface(memInterface);
+
+		odin.runWasm("/static/ljosalf.wasm", null, { wgpu: wgpuInterface.getInterface() }, memInterface, /*intSize=8*/);
+		//odin.runWasm("/static/odin_stripped.wasm", null, { wgpu: wgpuInterface.getInterface() }, memInterface, /*intSize=8*/);
+	</script>
 </body>
 </html>`
 
