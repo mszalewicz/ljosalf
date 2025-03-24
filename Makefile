@@ -12,6 +12,7 @@ bootstrap:
 build: bootstrap
 	mkdir -p bin
 	odin build . -target:js_wasm32 -extra-linker-flags:"--export-table" -out:server/public/ljosalf.wasm
+	# wasm-opt -Oz --strip-debug -o odin_stripped.wasm ljosalf.wasm
 	cp -r server/public bin
 	cd server && go build -o server.bin .
 	cp server/server.bin bin
